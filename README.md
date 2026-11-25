@@ -22,3 +22,6 @@ git push
 ```
 
 GitHub Pages publishes from the `main` branch, root folder. The public URL updates in about a minute.
+
+
+Narration is pre-rendered (xAI Ara). Clips live in `voice/` and are loaded after the first tap. Rebuild with `python3 src/build.py` from `/workspace/lbs`, then copy `last-default-slide.html` to `site/index.html` and `voice/*.mp3` to `site/voice/` before pushing.

@@ -107,6 +107,7 @@ body:not(.light) #start{color:rgba(255,255,255,.88);background:rgba(0,0,0,.4);bo
     <button class="b" id="bSnd">Sound</button>
     <button class="b" id="bVoice">Voice</button>
     <button class="b" id="bAuto">Auto</button>
+    <button class="b" id="bRestart" aria-label="Restart from the first slide">Restart</button>
     <button class="b" id="bMenu">More</button>
   </div>
   <div id="toast"></div>
@@ -114,7 +115,7 @@ body:not(.light) #start{color:rgba(255,255,255,.88);background:rgba(0,0,0,.4);bo
 <div id="blk"></div>
 <!--
   The Last Default Slide. Everything here is drawn and synthesized in the browser:
-  raw WebGL 2 shaders (no libraries), Canvas 2D for the slide, WebAudio for sound, speechSynthesis for the voice.
+  raw WebGL 2 shaders (no libraries), Canvas 2D for the slide, WebAudio for sound, pre-rendered narration.
 -->
 <script>
 // ---------- CONTENT (all facts sourced; see SRC) ----------
@@ -151,43 +152,43 @@ const SCENES = [
     {h:"",s:"",v:"",n:"Hands off. The slide edits itself, then breaks.",d:12}]},
  { id:"erdos", title:"Six weeks ago", date:"Oct 8", thread:"", gl:"sea", tr:"shatter", hint:"Drag to look around",
    grade:[1.05,.98,.9], beats:[
-    {k:"Oct 8 · six weeks ago", h:"An AI system tried 353 open Erdős problems.", s:"Each dot up there is one problem.", src:["science"], v:"Six weeks ago, an AI system took on three hundred and fifty-three open Erdős problems.", n:"Science paper, October 8. The 353 sky dots are the problems it attempted.", d:5},
-    {k:"Oct 8 · six weeks ago", h:"It solved 9. Two had been open for 56 years.", s:"It also settled 44 of 492 conjectures from the OEIS.", src:["science"], v:"It solved nine. Two of them had been open for fifty-six years.", n:"Nine lit. The two brightest are the 56-year-old ones.", d:5},
+    {k:"Oct 8 · six weeks ago", h:"An AI system tried 353 open Erdős problems.", s:"Each dot up there is one problem.", src:["science"], v:"Six weeks ago, an AI system took on 353 open Erdős problems.", n:"Science paper, October 8. The 353 sky dots are the problems it attempted.", d:5},
+    {k:"Oct 8 · six weeks ago", h:"It solved 9. Two had been open for 56 years.", s:"It also settled 44 of 492 conjectures from the OEIS.", src:["science"], v:"It solved nine. Two of them had been open for 56 years.", n:"Nine lit. The two brightest are the 56-year-old ones.", d:5},
     {k:"Oct 8 · six weeks ago", h:"That was the big math story of the year.", s:"For six weeks.", src:["science"], v:"That was the big math story of the year. For six weeks.", n:"The sea comes up. Everything after this is newer.", d:5}]},
  { id:"hub", title:"Pick a thread", date:"", thread:"", gl:"hub", tr:"portal", tap:true, hint:"Tap a light to pick what comes next",
    grade:[1,1,1.05], beats:[
     {k:"Oct 25 → Nov 25", h:"One month. Pick a thread.", s:"You'll get all three. Order is up to you.", src:[], v:"One month. Pick a thread.", n:"The viewer picks. Space takes the next unvisited thread.", d:3}]},
  { id:"models", title:"Four in nine days", date:"Nov 9–18", thread:"ai", gl:"city", tr:"slam", hint:"Move to steer",
    grade:[.95,1,1.1], beats:[
-    {k:"Nov 9", h:"Claude Fable 5.2.", s:"Anthropic.", src:["anth52"], v:"November ninth. Claude Fable five point two.", n:"First beacon.", d:2.6},
-    {k:"Nov 10", h:"Gemini 4 Carbon.", s:"Google. The next day.", src:["gcarbon"], v:"The next day, Gemini four Carbon.", n:"Second beacon.", d:2.6},
-    {k:"Nov 17", h:"GPT-6.2 Astra.", s:"OpenAI.", src:["flog"], v:"GPT six point two Astra.", n:"Third.", d:2.6},
-    {k:"Nov 18", h:"Gemini 4 Neon.", s:"Google, again.", src:["flog"], v:"Gemini four Neon.", n:"Fourth.", d:2.6},
+    {k:"Nov 9", h:"Claude Fable 5.2.", s:"Anthropic.", src:["anth52"], v:"November 9th. Claude Fable 5.2.", n:"First beacon.", d:2.6},
+    {k:"Nov 10", h:"Gemini 4 Carbon.", s:"Google. The next day.", src:["gcarbon"], v:"The next day, Gemini 4 Carbon.", n:"Second beacon.", d:2.6},
+    {k:"Nov 17", h:"GPT-6.2 Astra.", s:"OpenAI.", src:["flog"], v:"GPT 6.2 Astra.", n:"Third.", d:2.6},
+    {k:"Nov 18", h:"Gemini 4 Neon.", s:"Google, again.", src:["flog"], v:"Gemini 4 Neon.", n:"Fourth.", d:2.6},
     {k:"Nov 9 → Nov 18", h:"Four frontier models in nine days.", s:"One every 2.25 days. Last month's best is already old.", src:["anth52","gcarbon","flog"], v:"Four frontier models in nine days.", n:"Arithmetic: 9 days / 4 models.", d:4}]},
  { id:"swarm", title:"1,000 programmers", date:"Nov 16", thread:"ai", gl:"swarm", tr:"ink", hint:"Drag through them",
    grade:[.95,1.05,.9], beats:[
     {k:"Hugging Face · PyBot", h:"1,000+ agents. One repo.", s:"They wrote a chatbot in plain Python, with no model inside it.", src:["pybot","wolf"], v:"Hugging Face pointed more than a thousand agents at one repository.", n:"Every dot is an agent. Drag through them.", d:5},
-    {k:"Hugging Face · PyBot", h:"About 640,000 lines. 5,000+ versions.", s:"Win rate went from 0% to 26%.", src:["pybot","wolf"], v:"About six hundred and forty thousand lines of Python. Five thousand versions.", n:"Numbers from the repo and Thomas Wolf's post.", d:5},
-    {k:"Hugging Face · PyBot", h:"Only 40 to 60 were thinking at any moment.", s:"The rest were waiting on git merges.", src:["wolf"], v:"At any moment, only forty to sixty were calling a model. The rest were waiting on git merges.", n:"They queue into one line: the merge.", d:6}]},
+    {k:"Hugging Face · PyBot", h:"About 640,000 lines. 5,000+ versions.", s:"Win rate went from 0% to 26%.", src:["pybot","wolf"], v:"About 640,000 lines of Python. 5,000 versions.", n:"Numbers from the repo and Thomas Wolf's post.", d:5},
+    {k:"Hugging Face · PyBot", h:"Only 40 to 60 were thinking at any moment.", s:"The rest were waiting on git merges.", src:["wolf"], v:"At any moment, only 40 to 60 were calling a model. The rest were waiting on git merges.", n:"They queue into one line: the merge.", d:6}]},
  { id:"money", title:"The largest IPO", date:"Nov 12–18", thread:"ai", gl:"gold", tr:"daybreak", hint:"Drag to stir",
    grade:[1.08,1,.85], beats:[
-    {k:"Nov 18", h:"Anthropic goes public at $83 a share.", s:"Ticker: ANT.", src:["ipo","cnbc"], v:"November eighteenth. Anthropic goes public at eighty-three dollars a share.", n:"", d:4},
-    {k:"Nov 18", h:"980 million shares. About $81.3 billion.", s:"The largest IPO on record.", src:["ipo","cnbc"], v:"Nine hundred and eighty million shares. The largest IPO on record.", n:"83 × 980M ≈ $81.3B.", d:5, count:[0,81.3,1,"$","B"]},
+    {k:"Nov 18", h:"Anthropic goes public at $83 a share.", s:"Ticker: ANT.", src:["ipo","cnbc"], v:"November 18th. Anthropic goes public at 83 dollars a share.", n:"", d:4},
+    {k:"Nov 18", h:"980 million shares. About $81.3 billion.", s:"The largest IPO on record.", src:["ipo","cnbc"], v:"980 million shares. The largest IPO on record.", n:"83 × 980M ≈ $81.3B.", d:5, count:[0,81.3,1,"$","B"]},
     {k:"Nov 12", h:"Six days earlier, Nvidia's CEO resigned.", s:"Effective immediately. The CFO is interim CEO.", src:["nvda"], v:"Six days earlier, Jensen Huang resigned as Nvidia's chief executive. Effective immediately.", n:"", d:5}]},
  { id:"flt", title:"Fermat in 30 hours", date:"Nov 9", thread:"math", gl:"clock", tr:"tear", hint:"Drag sideways to run the clock",
    grade:[1.05,.97,.9], beats:[
-    {k:"Fermat's Last Theorem, machine-checked", h:"The first attempt took 11 days.", s:"264 hours. One segment each.", src:["anth52"], v:"Machine-checking Fermat's Last Theorem. The first attempt took eleven days.", n:"", d:5},
-    {k:"Claude Fable 5.2 · Nov 9", h:"This one took 30 hours.", s:"About 1,000 agents, little human help.", src:["anth52"], v:"This one took thirty hours. About a thousand agents.", n:"", d:5},
+    {k:"Fermat's Last Theorem, machine-checked", h:"The first attempt took 11 days.", s:"264 hours. One segment each.", src:["anth52"], v:"Machine-checking Fermat's Last Theorem. The first attempt took 11 days.", n:"", d:5},
+    {k:"Claude Fable 5.2 · Nov 9", h:"This one took 30 hours.", s:"About 1,000 agents, little human help.", src:["anth52"], v:"This one took 30 hours. About a thousand agents.", n:"", d:5},
     {k:"Claude Fable 5.2 · Nov 9", h:"And the proof came out 7× shorter.", s:"The same release reports two open black-hole problems solved.", src:["anth52"], v:"And the proof came out seven times shorter.", n:"", d:5}]},
  { id:"quantum", title:"Faster quantum algorithms", date:"Nov 23", thread:"math", gl:"waves", tr:"portal", tap:true, hint:"Tap to add a wave source",
    grade:[.98,.95,1.1], beats:[
     {k:"Google DeepMind · Nov 23", h:"Agent teams went looking for faster quantum algorithms.", s:"Every result checked in Lean. The teams met every 4 hours.", src:["dm"], v:"Agent teams went looking for faster quantum algorithms, and proved every result.", n:"Tap to add wave sources.", d:5},
-    {k:"Google DeepMind · Nov 23", h:"290× cheaper arcsin. 11.8× on a fusion calculation.", s:"Grover's search: 2.57× better.", src:["dm"], v:"Two hundred and ninety times cheaper on one routine.", n:"", d:5},
-    {k:"Google DeepMind · Nov 23", h:"481 qubits down to 333.", s:"For simulating a drug-metabolism enzyme.", src:["dm"], v:"Four hundred and eighty-one qubits, down to three hundred and thirty-three.", n:"", d:5}]},
+    {k:"Google DeepMind · Nov 23", h:"290× cheaper arcsin. 11.8× on a fusion calculation.", s:"Grover's search: 2.57× better.", src:["dm"], v:"290 times cheaper on one routine.", n:"", d:5},
+    {k:"Google DeepMind · Nov 23", h:"481 qubits down to 333.", s:"For simulating a drug-metabolism enzyme.", src:["dm"], v:"481 qubits, down to 333.", n:"", d:5}]},
  { id:"proteins", title:"Designed binders", date:"Nov 24–25", thread:"sci", gl:"protein", tr:"ink", tap:true, hint:"Tap to test a design",
    grade:[.92,1.02,1.08], beats:[
     {k:"OpenAI · Nov 24", h:"A language model designed proteins.", s:"Specialist models helped filter the designs.", src:["oaip"], v:"A language model designed proteins.", n:"Tap: each tap tests one design at the real hit rate.", d:4},
-    {k:"OpenAI · Nov 24", h:"35 of 322 bound their target.", s:"About 1 in 9. Tap to try your own.", src:["oaip"], v:"Thirty-five of three hundred and twenty-two stuck.", n:"", d:5},
+    {k:"OpenAI · Nov 24", h:"35 of 322 bound their target.", s:"About 1 in 9. Tap to try your own.", src:["oaip"], v:"35 of 322 stuck.", n:"", d:5},
     {k:"Live Science · Nov 25", h:"Same week: RF-409.", s:"An AI-designed protein cut blood sugar about 60% in 2 hours, in mice where insulin didn't work.", src:["ls"], v:"Same week, an AI-designed protein lowered blood sugar in mice where insulin didn't work.", n:"", d:6}]},
  { id:"starship", title:"Caught", date:"Nov 14", thread:"sci", gl:"ship", tr:"slam", hint:"Drag down to land it",
    grade:[1.08,.98,.9], beats:[
@@ -196,23 +197,23 @@ const SCENES = [
     {k:"Starship Flight 15 · Nov 14", h:"“Plummeting through fire to be snatched out of the air by steel.”", s:"Dan Huot, SpaceX", src:["space"], v:"", n:"", d:5}]},
  { id:"quasars", title:"Twins, too early", date:"Nov 10", thread:"sci", gl:"bh", tr:"portal", hint:"Drag to orbit",
    grade:[1,1,1.04], beats:[
-    {k:"Gemini North + JWST · Nov 10", h:"Two giant quasars, 900 million years after the Big Bang.", s:"1.5 billion and 400 million times the mass of the Sun.", src:["noir"], v:"Two giant quasars, nine hundred million years after the Big Bang.", n:"", d:5},
+    {k:"Gemini North + JWST · Nov 10", h:"Two giant quasars, 900 million years after the Big Bang.", s:"1.5 billion and 400 million times the mass of the Sun.", src:["noir"], v:"Two giant quasars, 900 million years after the Big Bang.", n:"", d:5},
     {k:"Gemini North + JWST · Nov 10", h:"“No definitive theoretical explanation for how a single one … exists so early, much less two.”", s:"Silvia Onorato", src:["noir"], v:"", n:"", d:6}]},
  { id:"quick", title:"Also this month", date:"Nov 4–25", thread:"sci", gl:"quick", tr:"cells",
    grade:[1,1,1], beats:[
-    {k:"Nature · Nov 4", h:"Seizures down more than 90%.", s:"Gene therapy into the brain, three people.", src:["nat1"], v:"Seizures down more than ninety percent.", n:"", d:4},
+    {k:"Nature · Nov 4", h:"Seizures down more than 90%.", s:"Gene therapy into the brain, three people.", src:["nat1"], v:"Seizures down more than 90 percent.", n:"", d:4},
     {k:"Caltech · Nov 25", h:"Light-driven nanobots in the brain.", s:"About 5× more drug delivered, in mice.", src:["cal"], v:"Nanobots, about five times more drug delivered.", n:"", d:4},
     {k:"ScienceDaily · Nov 24", h:"One positron, held almost still.", s:"Cooled near absolute zero, like an artificial atom.", src:["sd"], v:"One positron, held almost still.", n:"", d:4},
     {k:"ASU · Nov 25", h:"DNA cubes that build themselves.", s:"The largest non-crystal 3D DNA structure yet.", src:["asu"], v:"DNA cubes that assemble themselves.", n:"", d:4}]},
  { id:"riemann", title:"The line", date:"Nov 20", thread:"", gl:"zeta", tr:"line", tap:true, hint:"Tap near the line to hear a zero",
    grade:[1.05,.95,.92], beats:[
-    {k:"1859", h:"Riemann guessed that every zero sits on one line.", s:"The red curve is ζ along that line. Each crossing is a zero.", src:["sn"], v:"In eighteen fifty-nine, Riemann guessed where the zeros go.", n:"Curve: Riemann–Siegel Z(t), computed live. Gold dots: the first ten zeros.", d:6},
-    {k:"Nov 20, 2026", h:"Levent Alpöge and Claude posted a proof.", s:"Six weeks of work.", src:["sn","sa"], v:"On November twentieth, Levent Alpöge and Claude posted a proof.", n:"", d:5, count:[1859,2026,0,"",""]},
-    {k:"Nov 20, 2026", h:"175,187 Lean files. About 17 million lines.", s:"No person has read all of it. A machine checked all of it.", src:["sn","rub"], v:"A hundred and seventy-five thousand Lean files. About seventeen million lines.", n:"", d:6},
+    {k:"1859", h:"Riemann guessed that every zero sits on one line.", s:"The red curve is ζ along that line. Each crossing is a zero.", src:["sn"], v:"In 1859, Riemann guessed where the zeros go.", n:"Curve: Riemann–Siegel Z(t), computed live. Gold dots: the first ten zeros.", d:6},
+    {k:"Nov 20, 2026", h:"Levent Alpöge and Claude posted a proof.", s:"Six weeks of work.", src:["sn","sa"], v:"On November 20th, Levent Alpöge and Claude posted a proof.", n:"", d:5, count:[1859,2026,0,"",""]},
+    {k:"Nov 20, 2026", h:"175,187 Lean files. About 17 million lines.", s:"No person has read all of it. A machine checked all of it.", src:["sn","rub"], v:"175,187 Lean files. About 17 million lines.", n:"", d:6},
     {k:"Nov 21, 2026", h:"Outside mathematicians confirmed it the next day.", s:"", src:["sa","rub"], v:"Outside mathematicians confirmed it the next day.", n:"", d:5}]},
  { id:"after", title:"The morning after", date:"Nov 21", thread:"", gl:"pages", tr:"daybreak", hint:"Drag to stir the pages",
    grade:[1.06,1,.92], beats:[
-    {k:"The morning after", h:"Printed, it would run to about 250,000 pages.", s:"Within hours, mathematicians posted a proof a human can read.", src:["sn","nat2"], v:"Printed, it would run to about two hundred and fifty thousand pages.", n:"", d:5},
+    {k:"The morning after", h:"Printed, it would run to about 250,000 pages.", s:"Within hours, mathematicians posted a proof a human can read.", src:["sn","nat2"], v:"Printed, it would run to about 250,000 pages.", n:"", d:5},
     {k:"The morning after", h:"“If you'd asked me three months ago, I would never have predicted it.”", s:"Marcus du Sautoy", src:["sn"], v:"", n:"", d:6}]},
  { id:"close", title:"Questions?", date:"", thread:"", gl:null, tr:"unshatter",
    beats:[
@@ -723,10 +724,12 @@ const GL = (() => {
   return E;
 })();
 
-// ---------- AUDIO: everything synthesized; voice via speechSynthesis ----------
+const VOICE = {"erdos-0":{"src":"voice/erdos-0.mp3","dur":5.496,"bytes":43968},"erdos-1":{"src":"voice/erdos-1.mp3","dur":4.2,"bytes":33600},"erdos-2":{"src":"voice/erdos-2.mp3","dur":4.2,"bytes":33600},"hub-0":{"src":"voice/hub-0.mp3","dur":1.968,"bytes":15744},"models-0":{"src":"voice/models-0.mp3","dur":3.24,"bytes":25920},"models-1":{"src":"voice/models-1.mp3","dur":2.616,"bytes":20928},"models-2":{"src":"voice/models-2.mp3","dur":2.616,"bytes":20928},"models-3":{"src":"voice/models-3.mp3","dur":1.656,"bytes":13248},"models-4":{"src":"voice/models-4.mp3","dur":2.616,"bytes":20928},"swarm-0":{"src":"voice/swarm-0.mp3","dur":4.2,"bytes":33600},"swarm-1":{"src":"voice/swarm-1.mp3","dur":4.536,"bytes":36288},"swarm-2":{"src":"voice/swarm-2.mp3","dur":5.496,"bytes":43968},"money-0":{"src":"voice/money-0.mp3","dur":4.536,"bytes":36288},"money-1":{"src":"voice/money-1.mp3","dur":4.2,"bytes":33600},"money-2":{"src":"voice/money-2.mp3","dur":6.12,"bytes":48960},"flt-0":{"src":"voice/flt-0.mp3","dur":4.536,"bytes":36288},"flt-1":{"src":"voice/flt-1.mp3","dur":3.576,"bytes":28608},"flt-2":{"src":"voice/flt-2.mp3","dur":2.616,"bytes":20928},"quantum-0":{"src":"voice/quantum-0.mp3","dur":4.848,"bytes":38784},"quantum-1":{"src":"voice/quantum-1.mp3","dur":3.24,"bytes":25920},"quantum-2":{"src":"voice/quantum-2.mp3","dur":3.888,"bytes":31104},"proteins-0":{"src":"voice/proteins-0.mp3","dur":2.616,"bytes":20928},"proteins-1":{"src":"voice/proteins-1.mp3","dur":2.928,"bytes":23424},"proteins-2":{"src":"voice/proteins-2.mp3","dur":5.16,"bytes":41280},"starship-0":{"src":"voice/starship-0.mp3","dur":2.28,"bytes":18240},"starship-1":{"src":"voice/starship-1.mp3","dur":1.32,"bytes":10560},"quasars-0":{"src":"voice/quasars-0.mp3","dur":4.2,"bytes":33600},"quick-0":{"src":"voice/quick-0.mp3","dur":2.28,"bytes":18240},"quick-1":{"src":"voice/quick-1.mp3","dur":3.24,"bytes":25920},"quick-2":{"src":"voice/quick-2.mp3","dur":2.616,"bytes":20928},"quick-3":{"src":"voice/quick-3.mp3","dur":2.616,"bytes":20928},"riemann-0":{"src":"voice/riemann-0.mp3","dur":3.576,"bytes":28608},"riemann-1":{"src":"voice/riemann-1.mp3","dur":4.2,"bytes":33600},"riemann-2":{"src":"voice/riemann-2.mp3","dur":6.768,"bytes":54144},"riemann-3":{"src":"voice/riemann-3.mp3","dur":2.928,"bytes":23424},"after-0":{"src":"voice/after-0.mp3","dur":3.576,"bytes":28608},"close-1":{"src":"voice/close-1.mp3","dur":2.28,"bytes":18240}};
+
+// ---------- AUDIO: beds + SFX synthesized; narration is pre-rendered Ara clips ----------
 const AU = (() => {
   const A = { on:false, muted:false, voice:true, ctx:null, speaking:false };
-  let ctx, master, comp, sfxBus, musBus, verb, verbIn, delay, noiseBuf, bed = null, nextNoteT = 0, arpI = 0, lastScene = "", energy = 0, ptr = 0;
+  let ctx, master, comp, sfxBus, musBus, voiceBus, verb, verbIn, delay, noiseBuf, bed = null, nextNoteT = 0, arpI = 0, lastScene = "", energy = 0, ptr = 0;
   const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
   function makeIR(sec, decay) {
     const n = ctx.sampleRate * sec | 0, b = ctx.createBuffer(2, n, ctx.sampleRate);
@@ -744,6 +747,7 @@ const AU = (() => {
     delay.connect(dlp); dlp.connect(fb); fb.connect(delay); dlp.connect(verbIn); dlp.connect(master);
     sfxBus = ctx.createGain(); sfxBus.gain.value = .8; sfxBus.connect(master); const ss = ctx.createGain(); ss.gain.value = .35; sfxBus.connect(ss); ss.connect(verbIn);
     musBus = ctx.createGain(); musBus.gain.value = .55; musBus.connect(master); const ms = ctx.createGain(); ms.gain.value = .5; musBus.connect(ms); ms.connect(verbIn);
+    voiceBus = ctx.createGain(); voiceBus.gain.value = 1; voiceBus.connect(master); const vv = ctx.createGain(); vv.gain.value = .22; voiceBus.connect(vv); vv.connect(verbIn);
     noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate); { const d = noiseBuf.getChannelData(0); let b0 = 0, b1 = 0, b2 = 0; for (let i = 0; i < d.length; i++) { const w = Math.random() * 2 - 1; b0 = .99765 * b0 + w * .099046; b1 = .963 * b1 + w * .2965164; b2 = .57 * b2 + w * 1.0526913; d[i] = (b0 + b1 + b2 + w * .1848) * .18; } }
     setInterval(sched, 50);
     return true;
@@ -843,33 +847,51 @@ const AU = (() => {
       arpI++; nextNoteT += step;
     }
   }
-  // ---- voice
-  let voiceObj = null;
-  function pickVoice() {
-    if (!("speechSynthesis" in window)) return null; const vs = speechSynthesis.getVoices(); if (!vs.length) return null;
-    const pref = ["Daniel", "Google UK English Male", "Arthur", "Oliver", "Samantha", "Karen", "Microsoft Guy Online", "Microsoft Ryan Online", "Alex", "Google US English"];
-    for (const p of pref) { const v = vs.find(v => v.name.indexOf(p) >= 0 && /^en/i.test(v.lang)); if (v) return v; }
-    return vs.find(v => /^en[-_]GB/i.test(v.lang)) || vs.find(v => /^en/i.test(v.lang)) || null;
+  // ---- voice: pre-rendered Ara clips (VOICE manifest). No robot fallback.
+  const buffers = {}; const loading = {};
+  let voiceSrc = null, sayId = 0, currentClip = "";
+  function voiceUrl(id) {
+    const rec = (typeof VOICE !== "undefined") && VOICE[id]; if (!rec) return "";
+    try { return new URL(rec.src, location.href).href; } catch (e) { return rec.src; }
   }
-  if ("speechSynthesis" in window) { speechSynthesis.onvoiceschanged = () => { voiceObj = pickVoice(); }; }
-  let sayId = 0;
-  A.say = (text, done) => {
+  function loadClip(id) {
+    if (buffers[id]) return Promise.resolve(buffers[id]);
+    if (loading[id]) return loading[id];
+    const url = voiceUrl(id); if (!url || !ctx) return Promise.resolve(null);
+    loading[id] = fetch(url).then(r => { if (!r.ok) throw new Error("voice " + r.status); return r.arrayBuffer(); })
+      .then(ab => ctx.decodeAudioData(ab.slice ? ab.slice(0) : ab))
+      .then(buf => { buffers[id] = buf; return buf; })
+      .catch(() => { delete loading[id]; return null; });
+    return loading[id];
+  }
+  function preloadVoice() { if (typeof VOICE === "undefined") return; Object.keys(VOICE).forEach(id => loadClip(id)); }
+  function unduck() { if (musBus) musBus.gain.setTargetAtTime(.55, now(), .35); }
+  function stopClip() { if (voiceSrc) { try { voiceSrc.onended = null; voiceSrc.stop(); } catch (e) {} voiceSrc = null; } currentClip = ""; A.speaking = false; }
+  A.say = (id, done) => {
     const my = ++sayId;
-    if (!text || !A.voice || A.muted || !A.on || !("speechSynthesis" in window)) { done && done(); return; }
-    try { speechSynthesis.cancel(); } catch (e) {}
-    const u = new SpeechSynthesisUtterance(text); voiceObj = voiceObj || pickVoice(); if (voiceObj) u.voice = voiceObj; u.rate = 1.0; u.pitch = .92; u.volume = 1;
-    let fin = false; const end = () => { if (fin) return; fin = true; A.speaking = false; if (musBus) musBus.gain.setTargetAtTime(.55, now(), .4); if (my === sayId) done && done(); };
-    u.onend = end; u.onerror = end; A.speaking = true; if (musBus) musBus.gain.setTargetAtTime(.3, now(), .2);
-    setTimeout(end, 1200 + text.length * 95);
-    try { speechSynthesis.speak(u); } catch (e) { end(); }
+    const finish = () => { if (my !== sayId) return; if (voiceSrc) voiceSrc = null; currentClip = ""; A.speaking = false; unduck(); done && done(); };
+    if (!id || !A.voice || A.muted || !A.on || typeof VOICE === "undefined" || !VOICE[id]) { done && done(); return; }
+    stopClip();
+    const play = buf => {
+      if (my !== sayId) return;
+      if (!buf || !voiceBus) { finish(); return; }
+      if (musBus) musBus.gain.setTargetAtTime(.28, now(), .18);
+      A.speaking = true; currentClip = id;
+      const src = ctx.createBufferSource(); src.buffer = buf; src.connect(voiceBus);
+      src.onended = () => { if (voiceSrc === src) finish(); };
+      voiceSrc = src;
+      try { src.start(); } catch (e) { finish(); }
+    };
+    if (buffers[id]) play(buffers[id]); else loadClip(id).then(play);
   };
-  A.hush = () => { sayId++; try { speechSynthesis.cancel(); } catch (e) {} A.speaking = false; };
+  A.hush = () => { sayId++; stopClip(); unduck(); };
+  A.clip = () => currentClip;
+  A.clipReady = id => !!buffers[id];
   A.unlock = () => {
     if (!ctx) { if (!init()) return; }
     if (ctx.state !== "running") { const p = ctx.resume(); p && p.catch && p.catch(() => {}); }
-    // iOS: a silent buffer inside the gesture
     try { const b = ctx.createBuffer(1, 1, 22050), s = ctx.createBufferSource(); s.buffer = b; s.connect(ctx.destination); s.start(0); } catch (e) {}
-    if (!A.on) { A.on = true; if ("speechSynthesis" in window) { try { const u = new SpeechSynthesisUtterance(" "); u.volume = 0; speechSynthesis.speak(u); } catch (e) {} } if (lastScene) A.scene(lastScene, 0); }
+    if (!A.on) { A.on = true; preloadVoice(); if (lastScene) A.scene(lastScene, 0); }
   };
   A.mute = (m) => { A.muted = m; if (master) master.gain.setTargetAtTime(m ? 0 : .9, now(), .05); if (m) A.hush(); };
   A.zero = (z) => { if (!A.on || A.muted) return; const f = 110 * z / 14.134725; SFX.chime({ f: f * 2 }); };
@@ -1052,10 +1074,33 @@ function next() {
   if (S.beat < sc.beats.length - 1) return setBeat(S.beat + 1);
   const n = nextScene(); if (n) go(n, 0);
 }
+function goOpener(resetAll) {
+  AU.hush(); closePanel();
+  shard = null; trans = null;
+  if (resetAll) { S.hist = []; S.visited = {}; S.thread = ""; }
+  else S.hist = [];
+  S.id = "slide"; S.beat = 0; S.beatT = 0; S.tSpeech = true; S.holdUntil = 0;
+  lastLen = {};
+  SC.classList.remove("off");
+  document.body.classList.add("light");
+  drawSlide("title", 0);
+  start(true);
+  enter(byId.slide, 0);
+}
 function prev() {
-  if (trans || shard) return;
+  if (trans) trans = null;
+  if (shard) { shard = null; }
+  if (S.id === "slide") { if (S.beat > 0) return setBeat(S.beat - 1, true); return; }
   if (S.beat > 0) return setBeat(S.beat - 1, true);
-  const h = S.hist.pop(); if (h) go(h[0], byId[h[0]].beats.length - 1, true);
+  // From the thread picker, or the first beat of the scene after the opener,
+  // back returns to slide one — never to the self-edit beat that auto-shatters.
+  if (S.id === "hub" || S.id === "erdos") return goOpener(false);
+  const h = S.hist.pop();
+  if (h) {
+    if (h[0] === "slide") return goOpener(false);
+    return go(h[0], byId[h[0]].beats.length - 1, true);
+  }
+  goOpener(false);
 }
 function setBeat(b, back) {
   const sc = byId[S.id]; S.beat = b; S.beatT = 0; S.tSpeech = false; AU.sfx(back ? "click" : "whoosh", { d: .5 });
@@ -1063,8 +1108,14 @@ function setBeat(b, back) {
   setHud(sc, b, false); bigCount(sc.beats[b].count); AU.scene(S.id, b); onBeat(sc, b);
   speak(sc, b); ui(); hash();
 }
-function speak(sc, b) { const v = sc.beats[b] && sc.beats[b].v; S.tSpeech = false; AU.say(v, () => { S.tSpeech = true; }); }
+function speak(sc, b) {
+  const id = sc.id + "-" + b;
+  S.tSpeech = false;
+  if (!S.started || typeof VOICE === "undefined" || !VOICE[id]) { S.tSpeech = true; return; }
+  AU.say(id, () => { S.tSpeech = true; });
+}
 function go(id, beat = 0, back = false, cut = false) {
+  if (id === "slide" && (beat === 0 || back || cut)) return goOpener(cut && !back);
   const from = byId[S.id], to = byId[id]; if (!to) return;
   if (!back && S.id !== id) S.hist.push([S.id, S.beat]);
   for (const th in THREADS) if (THREADS[th].includes(id)) S.thread = th;
@@ -1119,13 +1170,14 @@ function closePanel() { const p = document.querySelector(".panel,#over"); if (p)
 function openPanel(kind, html) { closePanel(); panel = kind; const d = document.createElement("div"); d.className = kind === "over" ? "" : "panel"; if (kind === "over") d.id = "over"; d.innerHTML = html; d.addEventListener("pointerdown", e => e.stopPropagation()); d.addEventListener("pointerup", e => e.stopPropagation()); $("ui").append(d); return d; }
 function showNotes() { const sc = byId[S.id], B = sc.beats[S.beat]; const d = panel === "notes" ? document.querySelector(".panel") : openPanel("notes", ""); d.innerHTML = `<h3>Speaker notes · ${esc(sc.title)} · ${S.beat + 1}/${sc.beats.length}</h3><p>${esc(B.n || "—")}</p>${B.v ? `<p style="color:#9aa3b2">Voice: “${esc(B.v)}”</p>` : ""}${(B.src || []).map(k => `<div><a href="${SRC[k][1]}" target="_blank" rel="noopener">${esc(SRC[k][0])}</a></div>`).join("")}`; panel = "notes"; }
 function showSources() { openPanel("src", `<h3>Sources</h3>${Object.values(SRC).map(([l, u]) => `<div style="margin:0 0 8px"><b>${esc(l)}</b><br><a href="${u}" target="_blank" rel="noopener">${esc(u)}</a></div>`).join("")}<p style="color:#9aa3b2">Labelled illustrations are illustrations. The red curve on the line scene is the Riemann–Siegel Z function, computed live; the gold dots are the first ten zeros.</p>`); }
-function showHelp() { openPanel("help", `<h3>Controls</h3>${[["Next", "→  space  tap"], ["Back", "←"], ["Play by itself", "A"], ["Sound", "M"], ["Voice", "V"], ["Speaker notes", "N"], ["All scenes", "O"], ["Sources", "S"], ["Full screen", "F"], ["Black screen", "."]].map(([a, b]) => `<div class="row"><span>${a}</span><kbd>${b}</kbd></div>`).join("")}<p style="color:#9aa3b2;margin-top:12px">Most scenes react to dragging. Links: add #scene-beat to the address, e.g. #riemann-3.</p><p><a href="#" id="hS">Sources</a> · <a href="#" id="hN">Notes</a> · <a href="#" id="hO">All scenes</a></p>`); $("hS").onclick = e => { e.preventDefault(); showSources(); }; $("hN").onclick = e => { e.preventDefault(); showNotes(); }; $("hO").onclick = e => { e.preventDefault(); showOver(); }; }
+function showHelp() { openPanel("help", `<h3>Controls</h3>${[["Next", "→  space  tap"], ["Back", "←  swipe right"], ["Restart", "Home"], ["Play by itself", "A"], ["Sound", "M"], ["Voice", "V"], ["Speaker notes", "N"], ["All scenes", "O"], ["Sources", "S"], ["Full screen", "F"], ["Black screen", "."]].map(([a, b]) => `<div class="row"><span>${a}</span><kbd>${b}</kbd></div>`).join("")}<p style="color:#9aa3b2;margin-top:12px">Most scenes react to dragging. Links: add #scene-beat to the address, e.g. #riemann-3. #start returns to the first slide.</p><p><a href="#" id="hS">Sources</a> · <a href="#" id="hN">Notes</a> · <a href="#" id="hO">All scenes</a></p>`); $("hS").onclick = e => { e.preventDefault(); showSources(); }; $("hN").onclick = e => { e.preventDefault(); showNotes(); }; $("hO").onclick = e => { e.preventDefault(); showOver(); }; }
 function showOver() { const d = openPanel("over", SCENES.map(s => `<button data-id="${s.id}" class="${s.id === S.id ? "cur" : ""}"><small>${String(s.i + 1).padStart(2, "0")}${s.date ? " · " + s.date : ""}</small>${esc(s.title)}</button>`).join("")); d.querySelectorAll("button").forEach(b => b.onclick = () => { closePanel(); AU.unlock(); start(true); go(b.dataset.id, 0, false, true); }); }
 
 // ---- start
 function start(silent) {
   if (S.started) return; S.started = true; S.startedAt = performance.now(); AU.unlock(); $("start").style.display = "none";
   AU.scene(S.id, S.beat); if (!silent && S.id === "slide" && S.beat === 0) { S.beatT = Math.max(S.beatT, 2.2); }
+  speak(byId[S.id], S.beat);
 }
 
 // ---- input
@@ -1147,18 +1199,35 @@ function hoverHub(e) { const uvx = (e.clientX - innerWidth / 2) / innerHeight, u
 function addTap(x, y) { let k = 0, best = -1e9; taps.forEach((t, i) => { const age = t[2] < 0 ? 1e9 : t[2]; if (age > best) { best = age; k = i; } }); taps[k] = [x, y, 0, 0]; }
 stage.addEventListener("pointerdown", e => {
   if (e.target.closest && e.target.closest("button,a,.panel,#over")) return;
-  P.down = true; P.moved = 0; P.lastX = e.clientX; P.lastY = e.clientY; P.t0 = performance.now(); AU.unlock();
+  P.down = true; P.moved = 0; P.lastX = e.clientX; P.lastY = e.clientY; P.x0 = e.clientX; P.y0 = e.clientY; P.t0 = performance.now(); AU.unlock();
 });
 stage.addEventListener("pointerup", e => {
   if (!P.down) return; P.down = false; if (e.target.closest && e.target.closest("button,a,.panel,#over")) return;
   if (panel) { closePanel(); return; }
-  const quick = performance.now() - P.t0 < 450 && P.moved < 14; if (!quick) return;
+  const dt = performance.now() - P.t0, dx = e.clientX - (P.x0 || e.clientX), dy = e.clientY - (P.y0 || e.clientY);
+  if (S.started && dt < 700 && dx > 90 && Math.abs(dx) > Math.abs(dy) * 1.4) { swipePrev(); return; }
+  const quick = dt < 450 && P.moved < 14; if (!quick) return;
   if (!S.started) { start(); return; }
   const sc = byId[S.id]; const [x, y] = ndc(e);
   if (sc.tap) { tapScene(sc, x, y, e); S.holdUntil = performance.now() + 7000; return; }
   if (sc.id === "money") addTap(x, y);
   next();
 });
+let lastSwipeT = 0;
+function swipePrev() { if (performance.now() - lastSwipeT < 280) return; lastSwipeT = performance.now(); prev(); }
+let touch0 = null;
+stage.addEventListener("touchstart", e => {
+  if (e.target.closest && e.target.closest("button,a,.panel,#over")) { touch0 = null; return; }
+  const tch = e.changedTouches && e.changedTouches[0]; if (!tch) return;
+  touch0 = { x: tch.clientX, y: tch.clientY, t: performance.now() };
+}, { passive: true });
+stage.addEventListener("touchend", e => {
+  if (!touch0) return;
+  const tch = e.changedTouches && e.changedTouches[0]; if (!tch) { touch0 = null; return; }
+  const dx = tch.clientX - touch0.x, dy = tch.clientY - touch0.y, dt = performance.now() - touch0.t;
+  touch0 = null;
+  if (S.started && dt < 700 && dx > 90 && Math.abs(dx) > Math.abs(dy) * 1.4) swipePrev();
+}, { passive: true });
 function tapScene(sc, x, y, e) {
   if (sc.id === "hub") { const h = hoverHub(e); if (h >= 0) pick(["ai", "math", "sci"][h]); else next(); return; }
   if (sc.id === "quantum") { addTap(x, y); AU.sfx("pluck", { f: 220 * Math.pow(2, Math.round((x + 1) * 6) / 12) }); AU.sfx("chime", { f: 440 * Math.pow(2, Math.round((x + 1) * 6) / 12) }); return; }
@@ -1171,7 +1240,7 @@ addEventListener("keydown", e => {
   AU.unlock();
   if (["ArrowRight", "ArrowDown", " ", "PageDown", "Enter"].includes(k)) { e.preventDefault(); if (!e.repeat) next(); }
   else if (["ArrowLeft", "ArrowUp", "PageUp", "Backspace"].includes(k)) { e.preventDefault(); if (!e.repeat) prev(); }
-  else if (k === "Home") go("slide", 0, false, true); else if (k === "End") go("close", 0, false, true);
+  else if (k === "Home") { e.preventDefault(); goOpener(true); } else if (k === "End") go("close", 0, false, true);
   else if (k === "a" || k === "A") { S.auto = !S.auto; toast(S.auto ? "Playing by itself" : "Manual"); ui(); }
   else if (k === "m" || k === "M") { AU.mute(!AU.muted); toast(AU.muted ? "Sound off" : "Sound on"); ui(); }
   else if (k === "v" || k === "V") { AU.voice = !AU.voice; if (!AU.voice) AU.hush(); toast(AU.voice ? "Voice on" : "Voice off"); ui(); }
@@ -1190,8 +1259,9 @@ $("bVoice").onclick = e => { e.stopPropagation(); AU.unlock(); AU.voice = !AU.vo
 $("bAuto").onclick = e => { e.stopPropagation(); S.auto = !S.auto; ui(); };
 $("bMenu").onclick = e => { e.stopPropagation(); panel === "help" ? closePanel() : showHelp(); };
 $("eSrc").onclick = e => { e.stopPropagation(); showSources(); };
-$("eAgain").onclick = e => { e.stopPropagation(); S.hist = []; S.visited = {}; go("slide", 0, false, true); };
-addEventListener("hashchange", () => { const m = /^#([a-z]+)(?:-(\d+))?$/.exec(location.hash); if (m && byId[m[1]] && (m[1] !== S.id || (+m[2] || 1) - 1 !== S.beat)) go(m[1], cl((+m[2] || 1) - 1, 0, byId[m[1]].beats.length - 1), false, true); });
+$("eAgain").onclick = e => { e.stopPropagation(); goOpener(true); };
+$("bRestart").onclick = e => { e.stopPropagation(); start(true); goOpener(true); };
+addEventListener("hashchange", () => { const t = parseHash(location.hash); if (t && (t[0] !== S.id || t[1] !== S.beat)) { if (t[0] === "slide" && t[1] === 0) goOpener(true); else go(t[0], t[1], false, true); } });
 document.addEventListener("visibilitychange", () => { if (document.hidden) AU.hush(); });
 
 // ---- GL scene programs
@@ -1300,12 +1370,20 @@ function frame(now) {
 if (!GL.ok) { document.body.classList.add("nogl"); console.warn("WebGL 2 unavailable, using the light version:", GL.err); }
 else GL.buildShards();
 resize();
-const m = /^#([a-z]+)(?:-(\d+))?$/.exec(location.hash || "");
-if (m && byId[m[1]] && m[1] !== "slide") { const sc = byId[m[1]]; S.id = sc.id; S.beat = cl((+m[2] || 1) - 1, 0, sc.beats.length - 1); for (const th in THREADS) if (THREADS[th].includes(sc.id)) S.thread = th; enter(sc, S.beat); $("start").textContent = "Tap to begin"; }
+function parseHash(h) {
+  const raw = (h || "").replace(/^#/, "");
+  if (raw === "start") return ["slide", 0];
+  const m = /^([a-z]+)(?:-(\d+))?$/.exec(raw); if (!m) return null;
+  if (m[1] === "start") return ["slide", 0];
+  if (!byId[m[1]]) return null;
+  return [m[1], cl((+m[2] || 1) - 1, 0, byId[m[1]].beats.length - 1)];
+}
+const boot = parseHash(location.hash || "");
+if (boot && boot[0] !== "slide") { const sc = byId[boot[0]]; S.id = sc.id; S.beat = boot[1]; for (const th in THREADS) if (THREADS[th].includes(sc.id)) S.thread = th; enter(sc, S.beat); $("start").textContent = "Tap to begin"; }
 else { enter(byId.slide, 0); }
 // warm the first world while the slide sits there
 setTimeout(() => sceneProg(byId.erdos), 50);
-window.__deck = { S, go, next, prev, setBeat, byId, GL, AU, start };
+window.__deck = { S, go, next, prev, setBeat, byId, GL, AU, start, goOpener, parseHash };
 requestAnimationFrame(frame);
 })();
 
